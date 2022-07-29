@@ -13,7 +13,7 @@ def generate_unique_id():
     return code
 
 # Create your models here.
-class Room(models.Model):
+class Room(models.Model): 
     #Django: fat models, thin views/controllers
     code = models.CharField(max_length=8, default="", unique=True)
     host    = models.CharField(max_length=80, unique=True)
