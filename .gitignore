@@ -1,0 +1,5 @@
+music_controller/db.sqlite3
+music_controller/frontend/node_modules
+music_controller/music_controller/__pycache__
+music_controller/api/__pycache__
+music_controller/api/migrations/__pycache__
