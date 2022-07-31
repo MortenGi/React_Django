@@ -1,11 +1,9 @@
 music_controller/db.sqlite3
 music_controller/frontend/node_modules
 music_controller/frontend/__pycache__
+music_controller/node_modules
 music_controller/music_controller/__pycache__
 music_controller/api/__pycache__
-<<<<<<< HEAD
 music_controller/api/__pycache__/
 music_controller/api/migrations/__pycache__
-=======
 music_controller/api/migrations/__pycache__
->>>>>>> e77a69c0baaeab5d43b732dc2234f74c3618bb35
