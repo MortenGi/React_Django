@@ -19,9 +19,10 @@ class RoomView(generics.CreateAPIView): #also try: ListAPIView -> only a list, n
     serializer_class = RoomSerializer #how to convert queryset in some format that I can output
 
 class CreateRoomView(APIView):
+    serializer_class = CreateRoomSerializer
     #with API view we can overwrite methodes like GET PUT POST
     def post(self, request, format=None):
-        serializer_class = CreateRoomSerializer
+       
          #get the session key
         if not self.request.session.exists(self.request.session.session_key):
             self.request.session.create()
@@ -31,17 +32,18 @@ class CreateRoomView(APIView):
         if serializer.is_valid():
             guest_can_pause=serializer.data.get('guest_can_pause')
             votes_to_skip = serializer.data.get('votes_to_skip')
-            host = self.session.session_key
+            host = self.request.session.session_key
 
             #if we already have a session/host, we allow to overwrite
-            queryset = Room.object.filter(host=host)
+            queryset = Room.objects.filter(host=host)
             if queryset.exists():
                 room = queryset[0] #take the sessions room object
                 room.guest_can_pause = guest_can_pause
                 room.votes_to_skip = votes_to_skip
                 room.save(update_fields=['guest_can_pause', 'votes_to_skip'])#need to pass update_fields, cause we want to update an existing object and not create a new one
+                return Response(RoomSerializer(room).data, status.HTTP_200_OK)
             else: #create a new Room
                 room=Room(host=host, guest_can_pause=guest_can_pause, votes_to_skip=votes_to_skip)
                 room.save()
-
-        return Response(RoomSerializer(room).data, status.HTTP_201_CREATED)
+                return Response(RoomSerializer(room).data, status.HTTP_201_CREATED)
+        return Response({'Bad Request': 'Invalid data...'}, status.HTTP_400_BAD_REQUEST)
