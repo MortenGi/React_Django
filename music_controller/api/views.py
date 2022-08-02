@@ -18,6 +18,22 @@ class RoomView(generics.CreateAPIView): #also try: ListAPIView -> only a list, n
 
     serializer_class = RoomSerializer #how to convert queryset in some format that I can output
 
+class GetRoom(APIView):
+    serializer_class = RoomSerializer
+    look_me_up = "code" #note that this is accessed as an instance attribtue
+
+    def get(self, request):
+        code = request.GET.get(self.look_me_up)
+        if code != None:
+            room=Room.objects.filter(code=code)
+            if  len(room)>0:
+                data = RoomSerializer(room[0]).data
+                data['is_host'] = self.request.session.session_key == room[0].host #check if user who makes GET is host, and save that information
+                return Response(data, status.HTTP_200_OK)
+            return Response({'Room not Found': 'Invalid Room Code'}, status.HTTP_404_NOT_FOUND)
+        return Response({'Bad Request': 'Code Parameter not found in request'}, status.HTTP_400_BAD_REQUEST)
+
+
 class CreateRoomView(APIView):
     serializer_class = CreateRoomSerializer
     #with API view we can overwrite methodes like GET PUT POST

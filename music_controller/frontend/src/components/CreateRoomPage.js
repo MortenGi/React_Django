@@ -10,8 +10,9 @@ import { Link } from "react-router-dom";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel"; //wrapper used to give a label to a component which has none per default, like <Radio />
+import { withRouter } from "./withRouter";
 
-export default class CreateRoomPage extends Component {
+class CreateRoomPage extends Component {
   defaul_vites = 2;
   constructor(props) {
     super(props);
@@ -39,7 +40,7 @@ export default class CreateRoomPage extends Component {
     fetch("api/add", requestOptions)
       .then((_res) => _res.json())
       .then((data) => {
-        console.log(data);
+        this.props.navigate("/room/" + data.code);
       });
   };
 
@@ -109,3 +110,4 @@ export default class CreateRoomPage extends Component {
     ); //spacing input multiplied by 8 equals space between items in pixels
   }
 }
+export default withRouter(CreateRoomPage);
