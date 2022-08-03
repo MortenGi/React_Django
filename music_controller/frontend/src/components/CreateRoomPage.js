@@ -6,7 +6,6 @@ import Typography from "@material-ui/core/Typography"; //is just a nice header
 import TextField from "@material-ui/core/TextField";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl"; //best-practice to use this as a wrapper on own input components for accessibilty reasons
-import { Link } from "react-router-dom";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel"; //wrapper used to give a label to a component which has none per default, like <Radio />
@@ -40,7 +39,7 @@ class CreateRoomPage extends Component {
     fetch("api/add", requestOptions)
       .then((_res) => _res.json())
       .then((data) => {
-        this.props.navigate("/room/" + data.code);
+        this.props.navigate(`/room/${data.code}`);
       });
   };
 
