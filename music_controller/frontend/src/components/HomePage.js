@@ -35,7 +35,7 @@ function RenderHomePage() {
 function HomePage() {
   const [roomCode, setRoomCode] = useState(null);
 
-  async function componentDidMount() {
+  async function getCode() {
     fetch("/api/user-in-room")
       .then((_res) => _res.json())
       .then((data) => {
@@ -46,7 +46,7 @@ function HomePage() {
 
   /*https://reactjs.org/docs/hooks-faq.html#how-can-i-do-data-fetching-with-hooks*/
   useEffect(() => {
-    componentDidMount();
+    getCode();
   }, [roomCode]);
 
   return (
