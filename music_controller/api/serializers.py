@@ -14,3 +14,9 @@ class CreateRoomSerializer(serializers.ModelSerializer):
         model = Room
         fields = ('guest_can_pause','votes_to_skip') #'host' will not be passed, but created by a session key (sessions = temporary connection bewteen computers)
         #look at views.py to see how we retreive the session key via POST
+
+class UpdateRoomSerializer(serializers.ModelSerializer):
+    code = serializers.CharField(validators=[]) #code does not have to be unique
+    class Meta:
+        model = Room
+        fields = ('guest_can_pause','votes_to_skip', 'code') 
