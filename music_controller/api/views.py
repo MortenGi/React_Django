@@ -106,7 +106,7 @@ class LeaveRoom(APIView):
             return Response({'Message': 'Success'}, status=status.HTTP_200_OK)
 
 class UpdateRoom(APIView):
-    serializer_class = UpdateRoomSerializer()
+    serializer_class = UpdateRoomSerializer
     def patch(self, request, formate=None): #patch used to update something
         if not self.request.session.exists(self.request.session.session_key):
             self.request.session.create()

@@ -53,7 +53,7 @@ function Room(props) {
             votesToSkip={votesToSkip}
             guestCanPause={guestCanPause}
             roomCode={roomCode}
-            updateCallback={() => {}}
+            updateCallback={getRoomDetaills}
           />
         </Grid>
         <Grid item xs={12} align="center">

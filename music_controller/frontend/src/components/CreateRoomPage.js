@@ -10,13 +10,26 @@ import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel"; //wrapper used to give a label to a component which has none per default, like <Radio />
 import { withRouter } from "./withRouter";
+import { Collapse } from "@material-ui/core";
+import Alert from "@material-ui/lab/Alert";
 
 class CreateRoomPage extends Component {
-  defaul_vites = 2;
+  static defaultProps = {
+    voteToSkip: 2,
+    guestCanPause: true,
+    update: false,
+    roomCode: null,
+    updateCallback: () => {},
+  };
   constructor(props) {
     super(props);
     //whenevere the state elements are changed, the component will be updated
-    this.state = { guestCanPause: true, votesToSkip: this.defaultVotes };
+    this.state = {
+      guestCanPause: this.props.guestCanPause,
+      votesToSkip: this.props.votesToSkip,
+      errorMsg: "",
+      successMsg: "",
+    };
   }
 
   handleVotesChange = (e) => {
@@ -43,12 +56,73 @@ class CreateRoomPage extends Component {
       });
   };
 
+  handleUpdateButtonPressed = () => {
+    const requestOptions = {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        votes_to_skip: this.state.votesToSkip,
+        guest_can_pause: this.state.guestCanPause,
+        code: this.props.roomCode,
+      }),
+    };
+
+    fetch("/api/update-room", requestOptions).then((_res) => {
+      if (_res.ok) {
+        this.setState({
+          successMsg: "Room updated successfully!",
+        });
+      } else {
+        this.setState({
+          errorMsg: "Error updating room...",
+        });
+      }
+      this.props.updateCallback();
+    });
+  };
+
+  renderCreateButtons = () => {
+    return (
+      <Grid>
+        <Grid item xs={12} align="center">
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={this.handleRoomButtonPressed}
+          >
+            Create a room
+          </Button>
+        </Grid>
+        <Grid item xs={12} align="center">
+          <Button color="secondary" variant="contained" href="/">
+            Back
+          </Button>
+        </Grid>
+      </Grid>
+    );
+  };
+
+  renderUpdateButtons = () => {
+    return (
+      <Grid item xs={12} align="center">
+        <Button
+          color="primary"
+          variant="contained"
+          onClick={this.handleUpdateButtonPressed}
+        >
+          Update Room
+        </Button>
+      </Grid>
+    );
+  };
+
   render() {
+    const title = this.props.update ? "Update Room" : "Create a Room";
     return (
       <Grid container spacing={1}>
         <Grid item xs={12} align="center">
           <Typography component="h4" variant="h4">
-            Create a Room
+            {title}
           </Typography>
         </Grid>
         <Grid item xs={12} align="center">
@@ -58,7 +132,7 @@ class CreateRoomPage extends Component {
             </FormHelperText>
             <RadioGroup
               row
-              defaultValue="true"
+              defaultValue={this.props.guestCanPause.toString()}
               onChange={this.handleGuestCanPause}
             >
               <FormControlLabel
@@ -83,7 +157,7 @@ class CreateRoomPage extends Component {
               required={true}
               type="number"
               onChange={this.handleVotesChange}
-              defaultValue={this.defaultVotes}
+              defaultValue={this.state.votesToSkip}
               inputProps={{ min: 1, style: { textAlign: "center" } }}
             />
             <FormHelperText>
@@ -91,20 +165,10 @@ class CreateRoomPage extends Component {
             </FormHelperText>
           </FormControl>
         </Grid>
-        <Grid item xs={12} align="center">
-          <Button
-            color="primary"
-            variant="contained"
-            onClick={this.handleRoomButtonPressed}
-          >
-            Create a room
-          </Button>
-        </Grid>
-        <Grid item xs={12} align="center">
-          <Button color="secondary" variant="contained" href="/">
-            Back
-          </Button>
-        </Grid>
+
+        {this.props.update
+          ? this.renderUpdateButtons()
+          : this.renderCreateButtons()}
       </Grid>
     ); //spacing input multiplied by 8 equals space between items in pixels
   }
