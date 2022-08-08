@@ -16,7 +16,7 @@ function RoomJoinPage(props) {
     fetch("/api/join-room", requestOptions)
       .then((response) => {
         if (response.ok) {
-          props.navigate(`/room/${roomCode}`);
+          props.navigate(`/Room/${roomCode}`);
         } else {
           setError("Room not found.");
         }
