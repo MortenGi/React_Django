@@ -35,19 +35,23 @@ function RenderHomePage() {
 function HomePage() {
   const [roomCode, setRoomCode] = useState(null);
 
+  const clearRoomCode = () => {
+    setRoomCode(null);
+  };
+
   async function getCode() {
     fetch("/api/user-in-room")
       .then((_res) => _res.json())
       .then((data) => {
         setRoomCode(data.code);
-        console.log("Happend");
+        console.log(data.code);
       });
   }
 
   /*https://reactjs.org/docs/hooks-faq.html#how-can-i-do-data-fetching-with-hooks*/
   useEffect(() => {
     getCode();
-  }, [roomCode]);
+  }, []);
 
   return (
     <Router>
@@ -65,7 +69,10 @@ function HomePage() {
         />
         <Route path="/join" element={<RoomJoinPage />} />
         <Route path="/create" element={<CreateRoomPage />} />
-        <Route path="/room/:roomCode" element={<Room />} />
+        <Route
+          path="/room/:roomCode"
+          element={<Room leaveRoomCallBack={clearRoomCode} />}
+        />
         {/* By default, Router passes props to the component that tell us how we accessed it. Match() tells us how router matched the component with the URL we named  */}
       </Routes>
     </Router>
